@@ -1,0 +1,20 @@
+name: Create Label
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get issue type
+        run: echo "::set-output name=issue_type::${{ issue.body.match('(?<=More Information\.\n\n)[\w]+(?=\n\nESP-IDF version\.$)')[1] }}"
+        id: issue-type
+
+      - name: Create label
+        uses: peter-evans/create-or-update-label@v2
+        with:
+          name: ${{ steps.issue-type.outputs.issue_type }}
+          color: f29513
+          description: 'Component.'
